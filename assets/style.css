@@ -149,7 +149,7 @@ a {
 }
 
 /* For Mobile Phones and small screens ––––––––––––––––––––––––––––––––––––––––––––––––––*/
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 900px) {
   .four, .eight {
       min-width: 100%;
  }
@@ -166,6 +166,7 @@ a {
       width: 180%;
       text-align: center;
       min-width: 100%;
+      margin: 0%;
  }
 
  .div-user-controls {
@@ -181,9 +182,6 @@ a {
  .side-by-side-right{
     display: inline-block;
     width: 48%;
-  }
- .div-for-charts{
-    margin: 0px;
   }
 } 
 
