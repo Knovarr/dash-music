@@ -237,7 +237,7 @@ a {
 }
 
 .radio-toolbar label:hover {
-  background-color: #404040;
+  background-color: #999;
   border: 2px solid #BD00FF;
   -webkit-transition: .4s;
   transition: .4s;
