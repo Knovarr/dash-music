@@ -234,9 +234,8 @@ a {
   border: 2px solid #555;
   border-radius: 25px;
   margin-top: 7px;
-  margin-left: 7px;
   flex-wrap: wrap;
-  float: left;
+  float: inline-end;
 }
 
 .radio-toolbar label:hover {
@@ -262,8 +261,9 @@ a {
   border: 3px solid #575267;
   border-radius: 10px;
   margin-top: 7px;
-  margin-left: 7px;
+  margin-left: 30px;
   margin-right: 37px;
+  align-items: center;
 }
 
 .card-graph {
@@ -289,5 +289,5 @@ a {
 }
 
 .paragraph {
-  margin-top: 170px;
+  margin-top: 210px;
 }

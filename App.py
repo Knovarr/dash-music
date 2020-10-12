@@ -14,10 +14,11 @@ import dash_bootstrap_components as dbc
 
 # external_stylesheets = ['https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/slate/bootstrap.min.css']
 
-app = dash.Dash(__name__, 
-meta_tags={
-    'name': 'viewport', 'content':'width=device-width, initial-scale=1'
-})
+app = dash.Dash(__name__,
+     meta_tags=[{'name': 'viewport',
+                 'content': 'width=device-width, initial-scale=1.0'}]
+
+)
 server = app.server
 
 CURRENT_DIR = os.path.dirname(__file__)
@@ -113,6 +114,14 @@ app.layout = html.Div(
                                     ),
                                 ),
                                 html.Br(),
+                                html.P(
+                                    dcc.Markdown(
+                                        '''
+                                        - This web app uses *Python, HTML & CSS.*  
+                                        *Web app source code link coming soon.*
+                                        '''
+                                    ),
+                                ),
                             ],
                         ),
                         html.Br(),
@@ -133,27 +142,6 @@ app.layout = html.Div(
                                         ),
                                     ],
                                 ),
-                                html.Br(),
-                                html.Div(
-                                    className= 'paragraph',
-                                    children = [
-                                        html.P(
-                                            dcc.Markdown(
-                                                '''
-                                                ###### **This web app was designed using:**
-                                                - Python, HTML & CSS  
-                                                '''
-                                            ),
-                                        ),
-                                        html.P(
-                                            dcc.Markdown(
-                                                '''
-                                                *Web app source code link coming soon.*
-                                                '''
-                                            ),
-                                        ),
-                                    ],
-                                ),
                             ],
                         ),
                     ],
@@ -161,34 +149,24 @@ app.layout = html.Div(
                 html.Div(
                     className='eight columns div-for-charts',
                     children=[
-                        html.Div(
-                            className='card-graph',
+                        html.H3(
+                            id='artist-title',
                             children=[
-                                html.H3(
-                                    id='artist-title',
-                                    children=[
-                                    ],
-                                ),
-                                dcc.Graph(
-                                    id='artist-graph',
-                                    hoverData={'points': [{'customdata': []}]},
-                                    style={"height" : "40vh", "width" : "100%"}
-                                ),
                             ],
                         ),
-                        html.Div(
-                            className='card-graph',
+                        dcc.Graph(
+                            id='artist-graph',
+                            hoverData={'points': [{'customdata': []}]},
+                            style={"height" : "40vh", "width" : "100%"}
+                        ),
+                        html.H3(
+                            id='song-ti',
                             children=[
-                                html.H3(
-                                    id='song-ti',
-                                    children=[
-                                    ],
-                                ),
-                                dcc.Graph(
-                                    id='song-graph',
-                                    style={"height" : "40vh", "width" : "100%"}
-                                ),
                             ],
+                        ),
+                        dcc.Graph(
+                            id='song-graph',
+                            style={"height" : "40vh", "width" : "100%"}
                         ),
                     ],
                 ),
