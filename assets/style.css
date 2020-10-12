@@ -149,7 +149,7 @@ a {
 }
 
 /* For Mobile Phones and small screens ––––––––––––––––––––––––––––––––––––––––––––––––––*/
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 500px) {
   .four, .eight {
       min-width: 100%;
  }
@@ -163,7 +163,7 @@ a {
   }
   .div-for-charts {
       padding: 0px;
-      width: 180%;
+      width: 100%;
       text-align: center;
       min-width: 100%;
       margin: 0%;
