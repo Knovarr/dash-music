@@ -113,38 +113,43 @@ app.layout = html.Div(
                             ],
                         ),
                         html.Br(),
-                        html.H4('Select a Genre:'),
                         html.Div(
-                            className = 'radio-toolbar',
-                            children = [
-                                dbc.RadioItems(
+                            className= 'row',
+                            children=[
+                                html.H4('Select a Genre:'),
+                                html.Div(
                                     className = 'radio-toolbar',
-                                    id = 'genre-dropdown',
-                                    options = [
-                                        {'label': i, 'value': i} for i in top10
+                                    children = [
+                                        dbc.RadioItems(
+                                            className = 'radio-toolbar',
+                                            id = 'genre-dropdown',
+                                            options = [
+                                                {'label': i, 'value': i} for i in top10
+                                            ],
+                                            value = top10[0],
+                                        ),
                                     ],
-                                    value = top10[0],
                                 ),
-                            ],
-                        ),
-                        html.Br(),
-                        html.Div(
-                            className= 'paragraph',
-                            children = [
-                                html.P(
-                                    dcc.Markdown(
-                                        '''
-                                        ###### **This web app was designed using:**
-                                        - Python, HTML & CSS  
-                                        '''
-                                    ),
-                                ),
-                                html.P(
-                                    dcc.Markdown(
-                                        '''
-                                        *Web app source code link coming soon.*
-                                        '''
-                                    ),
+                                html.Br(),
+                                html.Div(
+                                    className= 'paragraph',
+                                    children = [
+                                        html.P(
+                                            dcc.Markdown(
+                                                '''
+                                                ###### **This web app was designed using:**
+                                                - Python, HTML & CSS  
+                                                '''
+                                            ),
+                                        ),
+                                        html.P(
+                                            dcc.Markdown(
+                                                '''
+                                                *Web app source code link coming soon.*
+                                                '''
+                                            ),
+                                        ),
+                                    ],
                                 ),
                             ],
                         ),
