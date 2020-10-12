@@ -48,20 +48,7 @@ a {
   min-width: 100%;
 }
 /* Graph Control Objects ––––––––––––––––––––––––––––––––––––––––––––––––––*/
-.div-user-controls {
-  padding-left: 55px;
-  padding-top: 64px;
-}
-.div-user-radio {
-  padding-left: 30px;
-  padding-top: 50px;
-  font-weight: 350;
-  font-size: 14px;
-}
-.div-for-dropdown {
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
+
 .div-for-slider {
   width: 97%;
   text-align: center;
@@ -149,7 +136,7 @@ a {
 }
 
 /* For Mobile Phones and small screens ––––––––––––––––––––––––––––––––––––––––––––––––––*/
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 768px) {
   .four, .eight {
       min-width: 100%;
  }
@@ -167,6 +154,21 @@ a {
       text-align: center;
       min-width: 100%;
       margin: 0%;
+ }
+
+ .div-user-controls {
+  padding-left: 55px;
+  padding-top: 64px;
+ }
+ .div-user-radio {
+  padding-left: 30px;
+  padding-top: 50px;
+  font-weight: 350;
+  font-size: 14px;
+ }
+ .div-for-dropdown {
+  padding-top: 12px;
+  padding-bottom: 12px;
  }
 
  .div-user-controls {
