@@ -60,6 +60,7 @@ Taken from https://codepen.io/chriddyp/pen/bWLwgP.css
  }
   .four.columns {
       width: 30.6666666667%;
+      height: auto;
  }
   .five.columns {
       width: 39.3333333333%;
