@@ -158,30 +158,34 @@ app.layout = html.Div(
                 html.Div(
                     className='eight columns div-for-charts',
                     children=[
-                        html.H3(
-                            id='artist-title',
+                        html.Div(
+                            className='card-graph',
                             children=[
+                                html.H3(
+                                    id='artist-title',
+                                    children=[
+                                    ],
+                                ),
+                                dcc.Graph(
+                                    id='artist-graph',
+                                    hoverData={'points': [{'customdata': []}]},
+                                    style={"height" : "40vh", "width" : "100%"}
+                                ),
                             ],
-                        ),
-                        dcc.Graph(
-                            id='artist-graph',
-                            hoverData={'points': [{'customdata': []}]},
-                            style={"height" : "40vh", "width" : "100%"}
                         ),
                         html.Div(
-                            className= 'line',
+                            className='card-graph',
                             children=[
-                                html.P('')
+                                html.H3(
+                                    id='song-ti',
+                                    children=[
+                                    ],
+                                ),
+                                dcc.Graph(
+                                    id='song-graph',
+                                    style={"height" : "40vh", "width" : "100%"}
+                                ),
                             ],
-                        ),
-                        html.H3(
-                            id='song-ti',
-                            children=[
-                            ],
-                        ),
-                        dcc.Graph(
-                            id='song-graph',
-                            style={"height" : "40vh", "width" : "100%"}
                         ),
                     ],
                 ),
