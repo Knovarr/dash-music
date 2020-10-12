@@ -60,7 +60,6 @@ Taken from https://codepen.io/chriddyp/pen/bWLwgP.css
  }
   .four.columns {
       width: 30.6666666667%;
-      height: 100vh;
  }
   .five.columns {
       width: 39.3333333333%;
@@ -372,13 +371,13 @@ hr {
 /* Self Clearing Goodness */
 .container:after, .row:after, .u-cf {
   content: "";
-  display: table;
+  display: inline;
   clear: both;
 }
 /* Media Queries –––––––––––––––––––––––––––––––––––––––––––––––––– */
 /* Note: The best way to structure the use of media queries is to create the queries near the relevant code. For example, if you wanted to change the styles for buttons on small devices, paste the mobile query code up in the buttons section and style it there. */
 /* Larger than mobile */
-@media (min-width: 400px) {
+@media (min-width: 600px) {
 }
 /* Larger than phablet (also point when grid becomes active) */
 @media (min-width: 550px) {
