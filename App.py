@@ -14,7 +14,7 @@ import dash_bootstrap_components as dbc
 
 # external_stylesheets = ['https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/slate/bootstrap.min.css']
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, meta_tags={'name':'viewport','content': 'width=device-width, initial-scale=1'})
 server = app.server
 
 CURRENT_DIR = os.path.dirname(__file__)
