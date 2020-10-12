@@ -148,6 +148,7 @@ a {
       margin: 0px;
       overflow-y: scroll;
   }
+
   .div-for-charts {
       padding: 0px;
       width: 100%;
@@ -156,32 +157,33 @@ a {
       margin: 0%;
  }
 
- .div-user-controls {
-  padding-left: 55px;
-  padding-top: 64px;
- }
- .div-user-radio {
-  padding-left: 30px;
-  padding-top: 50px;
-  font-weight: 350;
-  font-size: 14px;
- }
- .div-for-dropdown {
-  padding-top: 12px;
-  padding-bottom: 12px;
- }
+  .div-user-controls {
+    padding-left: 55px;
+    padding-top: 64px;
+  }
 
- .div-user-controls {
+  .div-user-radio {
+    padding-left: 30px;
+    padding-top: 50px;
+    font-weight: 350;
+    font-size: 14px;
+  }
+
+  .div-for-dropdown {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .div-user-controls {
     padding: 32px;
- }
- 
- .side-by-side{
+  }
+  
+  .side-by-side{
     display: inline-block;
     width: 48%;
   }
 
-   
- .side-by-side-right{
+  .side-by-side-right{
     display: inline-block;
     width: 48%;
   }
@@ -213,6 +215,7 @@ a {
 .CalendarMonth_table td {
   padding: unset;  
 }
+
 .radio-toolbar {
   margin: 10px;
 }
@@ -224,17 +227,16 @@ a {
 }
 
 .radio-toolbar label {
-    background-color: #333;
-    padding: 8px 18px;
-    font-family: sans-serif, Arial;
-    font-size: 16px;
-    border: 2px solid #555;
-    border-radius: 25px;
-    margin-top: 7px;
-    margin-left: 7px;
-    flex-wrap: wrap;
-    float: left;
-    
+  background-color: #333;
+  padding: 8px 18px;
+  font-family: sans-serif, Arial;
+  font-size: 16px;
+  border: 2px solid #555;
+  border-radius: 25px;
+  margin-top: 7px;
+  margin-left: 7px;
+  flex-wrap: wrap;
+  float: left;
 }
 
 .radio-toolbar label:hover {
@@ -253,11 +255,6 @@ a {
   border-color: #00ff9f;
   color: #00ff9f;
 }
-
-/*.radio-toolbar input[type="radio"]:focus ~ label {
-    border: 2px dashed rgb(240, 31, 31);
-}*/
-
 .card {
   padding: 8px 18px;
   font-family: sans-serif, Arial;
