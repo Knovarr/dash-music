@@ -55,8 +55,11 @@ a {
 }
 .logo {
   height: 35px;
-  padding-bottom: 12px;
-  margin-left: 8px;
+  padding-bottom: 70px;
+  margin-left: 15px;
+  margin-top: 30px;
+  align-items: center;
+  justify-items: center;
 }
 .Select-control, .Select-menu-outer, .Select-multi-value-wrapper, .select-up, .is-open .Select-control {
   background-color: #1E1E1E;
@@ -234,6 +237,7 @@ a {
   border: 2px solid #555;
   border-radius: 25px;
   margin-top: 7px;
+  margin-left: 7px;
   flex-wrap: wrap;
   float: left;
 }
@@ -260,10 +264,9 @@ a {
   font-size: 16px;
   border: 3px solid #575267;
   border-radius: 10px;
-  margin-top: 7px;
-  margin-left: 30px;
-  margin-right: 37px;
   align-items: center;
+  height: auto;
+  scroll-behavior: smooth;
 }
 
 .card-graph {
@@ -290,4 +293,90 @@ a {
 
 .paragraph {
   margin-top: 210px;
+}
+
+.tab-style {
+  color: #D8D8D8;
+  background-color: #333 !important;
+  text-align: center !important;
+  border: 0px !important;
+}
+
+.tab-style:hover {
+  color: #FFFFFF;
+  font-weight: 600;
+  background-color: #333 !important;
+  text-align: center !important;
+  border: 0px !important;
+}
+
+.tab-select {
+  color: #00FF9F !important;
+  text-align: center !important;
+  font-weight: 600;
+}
+
+.center {
+  text-align: center;
+}
+
+.toggle {
+  color: #D8D8D8;
+  margin:auto; 
+  margin-top: 20px; 
+  border-style: none;
+}
+
+.toggle:hover {
+  color: #FFFFFF;
+}
+
+.rc{
+  margin: 1px;
+}
+
+.rc-slider-track {
+  background-color: #777;
+}
+
+.rc-slider-dot-active {  
+  border-color: #777;
+  border: solid 2px #777;
+}
+
+.rc-slider-handle {
+  background-color: #555;
+  border-color: #00FF9F !important;
+}
+
+.rc-slider-handle:hover {
+  background-color: #777;
+  border-color: #00FF9F;
+  transition: .4s;
+}
+
+.rc-slider-handle-click-focused {
+  border-color: #00FF9F;
+}
+
+.rc-slider-handle-active:active {
+  border-color: red;
+}
+
+.rc-slider-mark-text {
+  color: #D8D8D8;
+}
+
+.rc-slider-rail {
+  background-color: #333;
+}
+
+.daq-toggleswitch--light__indicator--on {
+  background-color: #00FF9F !important;
+  border-color: #00FF9F !important;
+  box-shadow: 0 4px 8px 0 rgba(0,255,159,0.8) !important;
+}
+
+.daq-toggleswitch--light__indicator--off {
+  background-color: #333;
 }
