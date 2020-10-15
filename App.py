@@ -11,6 +11,7 @@ import dash_core_components as dcc
 import dash_html_components as html 
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
+import dash_daq as daq
 
 # external_stylesheets = ['https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/slate/bootstrap.min.css']
 
@@ -67,14 +68,52 @@ for n in fdf['Weekday']:
 
 fdf['Weekday Name'] = weekdayn
 
+monthn = []
+
+for e in fdf['Month']:
+    if e == 1:
+        monthn.append('January')
+    elif e == 2:
+        monthn.append('Febuary')
+    elif e == 3:
+        monthn.append('March')
+    elif e == 4:
+        monthn.append('April')
+    elif e == 5:
+        monthn.append('May')
+    elif e == 6:
+        monthn.append('June')
+    elif e == 7:
+        monthn.append('July')
+    elif e == 8:
+        monthn.append('August')
+    elif e == 9:
+        monthn.append('September')
+    elif e == 10:
+        monthn.append('October')
+    elif e == 11:
+        monthn.append('November')
+    else:
+        monthn.append('December')
+
+fdf['Monthn'] = monthn
+
 Timedf = fdf.copy()
 Timedf['Time'] = Timedf['Time'].str[:2]
 Timedf['Time'] = Timedf['Time'].replace('0','00')
 
+top7 = fdf.groupby(['Artist'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False).head(7)['Artist'].tolist()
 
 top10 = fdf.groupby(['Genre'])['Play Count'].sum().reset_index().sort_values('Play Count', ascending = False).head(10)['Genre'].tolist()
 
 song50 = fdf.groupby(['Artist','Song'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = True).head(50)['Song'].tolist()
+
+theme =  {
+    'dark': True,
+    'detail': '#007439',
+    'primary': '#00EA64',
+    'secondary': '#6E6E6E',
+}
 
 app.layout = html.Div(
     children = [
@@ -82,66 +121,132 @@ app.layout = html.Div(
             className = 'row',
             children = [
                 html.Div(
-                    className = 'four columns div-user-controls bg-grey',
+                    className = 'four columns div-user-controls',
                     children = [
                         html.Img(
                             className = 'logo', src = app.get_asset_url('Apple_Music_Logo.png')
-                        ),
-                        
+                        ),                     
                         html.Div(
                             className= 'card',
                             children=[
-                                html.H2('''Clint's Music - Data App'''),
-                                html.P(
-                                    dcc.Markdown(
-                                        '''
-                                        This web app shows the music listening history  
-                                        from my Apple Music subscription.
-                                        ''' 
+                                dcc.Tabs(id='manhattan-tabs',value='what-is',children=[
+                                    dcc.Tab(
+                                        label='About',
+                                        value='what-is',
+                                        className='tab-style',
+                                        selected_className='tab-select',
+                                        children=html.Div(className='control-tab',children=[
+                                            html.Div(
+                                                className='center',
+                                                children=[
+                                                    html.H2('''Clint's Music - Data App'''),
+                                                ],
+                                            ),
+                                            html.P(
+                                                dcc.Markdown(
+                                                    '''
+                                                    This web app shows the music listening history  
+                                                    from my Apple Music subscription.
+                                                    ''' 
+                                                ),
+                                            ),
+                                            html.Br(),
+                                            html.Div(
+                                                className='center',
+                                                children=[
+                                                    html.H2('''How to use this app'''),
+                                                ],
+                                            ),
+                                            html.P(
+                                                dcc.Markdown(
+                                                    '''
+                                                    - Select the *'Control Panel'* tab.
+                                                    - Select which *graph layout* you'd like to view followed by a genre.
+                                                    '''
+                                                ),
+                                            ),
+                                            html.Br(),
+                                            html.P(
+                                                dcc.Markdown(
+                                                    '''
+                                                    - This web app uses *Python, HTML & CSS.*  
+                                                    *Web app source code link coming soon.*
+                                                    '''
+                                                ),
+                                            ),
+                                        ]),
                                     ),
-                                ),
-                                html.Br(),
-                                html.H2('''How to use this app:'''),
-                                html.P(
-                                    dcc.Markdown(
-                                        '''
-                                        - Select a genre from the ten listed below.
-                                        - Once selected, the two graphs will update.
-                                        - The top graph visualises the top 7 artists of the genre selected.
-                                        - The bottom graph visualises the top 10 songs of the genre **OR** artist selected.
-                                        - To view the top ten songs by an artist, hover over an artist on the artist graph to view the top ten songs.
-                                        '''
+                                    dcc.Tab(
+                                        label='Control Panel',
+                                        value='Control Panel',
+                                        className='tab-style',
+                                        selected_className='tab-select',
+                                        children=[
+                                            html.Div(
+                                                className='center',
+                                                children=[
+                                                    html.Br(),
+                                                    html.H4('Select a graph layout')
+                                                ],
+                                            ),
+                                            html.Div(
+                                                className='center',
+                                                children=[
+                                                    html.Br(),
+                                                    daq.ToggleSwitch(
+                                                        id='type-toggle',
+                                                        label=['Song', 'Time-Series'],
+                                                        value=False,
+                                                        color = '#333',
+                                                        theme = {
+                                                            'dark': True
+                                                        },
+                                                    ),
+                                                ],
+                                            ),
+                                            html.Div(
+                                                id='slider-container',
+                                                className='center',
+                                                children=[
+                                                    html.Br(),
+                                                    dcc.Slider(
+                                                        id='sslider',
+                                                        className='rc',
+                                                        min=2017,
+                                                        max=2020,
+                                                        value=2017,
+                                                        marks={
+                                                            2017: {'label': '2017'},
+                                                            2018: {'label': '2018'},
+                                                            2019: {'label': '2019'},
+                                                            2020: {'label': '2020'},
+                                                        }
+                                                    ), 
+                                                ],
+                                            ),
+                                            html.Div(
+                                                className='center',
+                                                children=[
+                                                    html.Br(),
+                                                    html.H4('Select a Genre'),
+                                                ],
+                                            ),
+                                            html.Div(
+                                                className = 'radio-toolbar',
+                                                children = [
+                                                    dbc.RadioItems(
+                                                        className = 'radio-toolbar',
+                                                        id = 'genre-dropdown',
+                                                        options = [
+                                                            {'label': i, 'value': i} for i in top10
+                                                        ],
+                                                        value = top10[0],
+                                                    ),
+                                                ],
+                                            ),
+                                        ],
                                     ),
-                                ),
-                                html.Br(),
-                                html.P(
-                                    dcc.Markdown(
-                                        '''
-                                        - This web app uses *Python, HTML & CSS.*  
-                                        *Web app source code link coming soon.*
-                                        '''
-                                    ),
-                                ),
-                            ],
-                        ),
-                        html.Br(),
-                        html.Div(
-                            className= 'row',
-                            children=[
-                                html.H4('Select a Genre:'),
-                                html.Div(
-                                    className = 'radio-toolbar',
-                                    children = [
-                                        dbc.RadioItems(
-                                            className = 'radio-toolbar',
-                                            id = 'genre-dropdown',
-                                            options = [
-                                                {'label': i, 'value': i} for i in top10
-                                            ],
-                                            value = top10[0],
-                                        ),
-                                    ],
-                                ),
+                                ]),
                             ],
                         ),
                     ],
@@ -159,13 +264,24 @@ app.layout = html.Div(
                             hoverData={'points': [{'customdata': []}]},
                             style={"height" : "40vh", "width" : "100%"}
                         ),
-                        html.H3(
-                            id='song-ti',
+                        html.Div(
                             children=[
+                                html.H3(
+                                    id='song-ti',
+                                    children=[
+                                    ],
+                                    style = {'display': 'block'}
+                                ),
+                                html.H3(
+                                    id='song-ti-2',
+                                    children=[
+                                    ],
+                                    style = {'display': 'block'}
+                                ),
                             ],
                         ),
                         dcc.Graph(
-                            id='song-graph',
+                            id='song-time-graph',
                             style={"height" : "40vh", "width" : "100%"}
                         ),
                     ],
@@ -177,106 +293,271 @@ app.layout = html.Div(
 # ----------------------------------------------
 @app.callback(
     Output('artist-graph', 'figure'),
-    [Input('genre-dropdown', 'value')]
+    [Input('genre-dropdown', 'value'),
+    Input('type-toggle', 'value'),
+    Input('sslider', 'value')]
 )
 
-def update_artist_graph(genre_selected):
+def update_artist_graph(genre_selected, toggle, year_sel):
+
     print(genre_selected)
     print(type(genre_selected))
+    if toggle == False:
 
-    tdf = fdf[fdf['Genre'] == genre_selected]
-    tdf = tdf.groupby(['Artist', 'Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
-    # top5 = tdf.groupby(['Artist'])['Play Count'].sum().reset_index().sort_values('Play Count', ascending = False).head(5)['Artist'].tolist()
+        tdf = fdf[fdf['Genre'] == genre_selected]
+        tdf = tdf.groupby(['Artist', 'Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
+        # top5 = tdf.groupby(['Artist'])['Play Count'].sum().reset_index().sort_values('Play Count', ascending = False).head(5)['Artist'].tolist()
 
-    # tdf = tdf[tdf['Artist'].isin(top5)]
-    fig = px.bar(
-        tdf,
-        x = 'Artist',
-        y = 'Play Count',
-        color = 'Play Count',
-        color_continuous_scale = [(0,"#EA00FF"), (1,"#BD00FF")],
-        template = 'plotly_dark',
-        orientation = 'v',
-        custom_data = ['Artist', 'Genre']
-    )
-    fig.update_traces(hovertemplate = '<br>'.join([
-        'Artist: <b>%{x}</b>',
-        'Genre: <b>%{customdata[1]}</b>',
-        'Play Count: <b>%{y}</b>',
-    ]))
-    fig.update_xaxes(
-        range=(-.5,6.5)
-    )
-    fig.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        coloraxis_showscale = False,
-        margin = dict(b = 160)
-    )
-    fig.update_yaxes(
-        {'showgrid': False}
-    )
-
-
-    return fig
-
-# Clear Hover Data if Click Data is used
-
-@app.callback(
-    Output('song-graph', 'figure'),
-    [Input('genre-dropdown', 'value'),
-    Input('artist-graph', 'hoverData')]
-)
-
-def update_song_graph(genre_selected, hoverData):
-
-
-    if genre_selected:
-
-        sdf = fdf[fdf['Genre'] == genre_selected]
-        sdf = sdf.groupby(['Artist', 'Song', 'Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
-    if hoverData:
-
-        genre_name = hoverData['points'][0]['customdata'][0]
-        sdf = fdf[fdf['Artist'] == genre_name]
-        sdf = sdf.groupby(['Artist','Song','Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
-    #top15 = sdf.groupby(['Song'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False).head(15)['Song'].tolist()
-    #sdf = sdf[sdf['Song'].isin(top15)]
-
-    fig = px.bar(
-        sdf,
-        x = 'Song',
-        y = 'Play Count',
-        color = 'Play Count',
-        color_continuous_scale = [(0,"#EA00FF"), (1,"#BD00FF")],
-        orientation = 'v',
-        template = 'plotly_dark',
-        custom_data = ['Song', 'Genre', 'Artist']
-    )
-    fig.update_layout(
-        yaxis={'categoryorder':'category ascending'},
-        margin = dict(b=200)
-    )
-    fig.update_traces(
-        hovertemplate = '<br>'.join([
-        'Song: <b>%{x}</b>',
-        'Artist: <b>%{customdata[2]}</b>',
-        'Genre: <b>%{customdata[1]}</b>',
-        'Play Count: <b>%{y}</b>']),
-    )
-    fig.update_xaxes(
-        range=(-.5,9.5)
-    )
-    fig.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        coloraxis_showscale = False,
-    )
-    fig.update_yaxes(
-        {'showgrid': False}
+        # tdf = tdf[tdf['Artist'].isin(top5)]
+        fig = px.bar(
+            tdf,
+            x = 'Artist',
+            y = 'Play Count',
+            color = 'Play Count',
+            color_continuous_scale = [(0,"#EA00FF"), (1,"#BD00FF")],
+            template = 'plotly_dark',
+            orientation = 'v',
+            custom_data = ['Artist', 'Genre']
+        )
+        fig.update_traces(hovertemplate = '<br>'.join([
+            'Artist: <b>%{x}</b>',
+            'Genre: <b>%{customdata[1]}</b>',
+            'Play Count: <b>%{y}</b>',
+        ]))
+        fig.update_xaxes(
+            range=(-.5,6.5)
+        )
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            coloraxis_showscale = False,
+            margin = dict(b = 160)
+        )
+        fig.update_yaxes(
+            {'showgrid': False}
         )
 
-    return fig
+
+        return fig
+
+    if toggle == True:
+
+        if genre_selected:
+
+        # pdf = fdf[fdf['Genre'] == genre_selected]
+        # pdf = pdf[pdf['Year'] == year_sel]
+        # pdf = pdf.groupby(['Artist', 'Genre', 'Year', 'Month', 'Monthn'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
+        # top7 = pdf.groupby(['Artist'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False).head(7)['Artist'].tolist()
+        # ppf = pdf[pdf['Artist'].isin(top7)]
+        # ppf = ppf.iloc[0,0]
+        # pdf = pdf[pdf['Artist'] == ppf]
+
+            tdf = fdf[fdf['Year'] == year_sel]
+            tdf = tdf[tdf['Genre'] == genre_selected]
+            tdf = tdf.groupby(['Artist', 'Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
+            # top5 = tdf.groupby(['Artist'])['Play Count'].sum().reset_index().sort_values('Play Count', ascending = False).head(5)['Artist'].tolist()
+
+            # tdf = tdf[tdf['Artist'].isin(top5)]
+            fig = px.bar(
+                tdf,
+                x = 'Artist',
+                y = 'Play Count',
+                color = 'Play Count',
+                color_continuous_scale = [(0,"#EA00FF"), (1,"#BD00FF")],
+                template = 'plotly_dark',
+                orientation = 'v',
+                custom_data = ['Artist', 'Genre']
+            )
+            fig.update_traces(hovertemplate = '<br>'.join([
+                'Artist: <b>%{x}</b>',
+                'Genre: <b>%{customdata[1]}</b>',
+                'Play Count: <b>%{y}</b>',
+            ]))
+            fig.update_xaxes(
+                range=(-.5,6.5)
+            )
+            fig.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                coloraxis_showscale = False,
+                margin = dict(b = 160)
+            )
+            fig.update_yaxes(
+                {'showgrid': False}
+            )
+
+            return fig
+
+@app.callback([
+    Output('song-ti-2', 'style'),
+    Output('song-ti', 'style')],
+    [Input('type-toggle', 'value')]
+)
+
+def update_title(toggle):
+    if toggle == True:
+
+        return {'display': 'block'}, {'display': 'none'}
+
+    if toggle == False:
+
+        return {'display': 'none'}, {'display': 'block'}
+
+@app.callback(
+    Output('song-time-graph', 'figure'),
+    [Input('genre-dropdown', 'value'),
+    Input('artist-graph', 'hoverData'),
+    Input('artist-graph', 'clickData'),
+    Input('type-toggle', 'value'),
+    Input('sslider', 'value')]
+)
+
+def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
+
+    if toggle == False:
+
+        if genre_selected:
+
+            sdf = fdf[fdf['Genre'] == genre_selected]
+            sdf = sdf.groupby(['Artist', 'Song', 'Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
+        if hoverData:
+
+            genre_name = hoverData['points'][0]['customdata'][0]
+            sdf = fdf[fdf['Artist'] == genre_name]
+            sdf = sdf.groupby(['Artist','Song','Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
+        #top15 = sdf.groupby(['Song'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False).head(15)['Song'].tolist()
+        #sdf = sdf[sdf['Song'].isin(top15)]
+
+        if clickData:
+
+            genre_name = clickData['points'][0]['customdata'][0]
+            sdf = fdf[fdf['Artist'] == genre_name]
+            sdf = sdf.groupby(['Artist','Song','Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
+
+        fig = px.bar(
+            sdf,
+            x = 'Song',
+            y = 'Play Count',
+            color = 'Play Count',
+            color_continuous_scale = [(0,"#EA00FF"), (1,"#BD00FF")],
+            orientation = 'v',
+            template = 'plotly_dark',
+            custom_data = ['Song', 'Genre', 'Artist']
+        )
+        fig.update_layout(
+            yaxis={'categoryorder':'category ascending'},
+            margin = dict(b=200)
+        )
+        fig.update_traces(
+            hovertemplate = '<br>'.join([
+            'Song: <b>%{x}</b>',
+            'Artist: <b>%{customdata[2]}</b>',
+            'Genre: <b>%{customdata[1]}</b>',
+            'Play Count: <b>%{y}</b>']),
+        )
+        fig.update_xaxes(
+            range=(-.5,9.5)
+        )
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            coloraxis_showscale = False,
+        )
+        fig.update_yaxes(
+            {'showgrid': False}
+            )
+
+        return fig
+
+    if toggle == True:
+
+        if genre_selected:
+
+            pdf = fdf[fdf['Genre'] == genre_selected]
+            pdf = pdf[pdf['Year'] == year_sel]
+            pdf = pdf.groupby(['Month','Artist', 'Genre', 'Year', 'Monthn'])['Play Count'].count().reset_index().sort_values('Month', ascending = True)
+            top7 = pdf.groupby(['Artist'])['Play Count'].sum().reset_index().sort_values('Play Count', ascending = False).head(7)['Artist'].tolist()
+            pdf = pdf[pdf['Artist'].isin(top7)]
+        if hoverData:
+
+            genre_name = hoverData['points'][0]['customdata'][0]
+            pdf = fdf[fdf['Artist'] == genre_name]
+            pdf = pdf[pdf['Genre'] == genre_selected]
+            pdf = pdf[pdf['Year'] == year_sel]
+            pdf = pdf.groupby(['Artist', 'Genre', 'Year', 'Month', 'Monthn'])['Play Count'].count().reset_index()
+        #top15 = sdf.groupby(['Song'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False).head(15)['Song'].tolist()
+        #sdf = sdf[sdf['Song'].isin(top15)]
+
+        if clickData:
+
+            genre_name = clickData['points'][0]['customdata'][0]
+            pdf = fdf[fdf['Artist'] == genre_name]
+            pdf = pdf[pdf['Genre'] == genre_selected]
+            pdf = pdf[pdf['Year'] == year_sel]
+            pdf = pdf.groupby(['Artist', 'Genre', 'Year', 'Month', 'Monthn'])['Play Count'].count().reset_index()
+
+
+        fig = px.line(
+            pdf,
+            x = 'Month',
+            y = 'Play Count',
+            color = 'Artist',
+            custom_data= ['Artist', 'Genre', 'Year', 'Month', 'Monthn', 'Play Count'],
+            template = 'plotly_dark'
+        )
+
+        fig.update_traces(
+            hovertemplate = '<br>'.join([
+                'Artist: <b>%{customdata[0]}</b>',
+                'Genre: <b>%{customdata[1]}</b>',
+                'Month: <b>%{customdata[4]}</b>',
+                'Year: <b>%{customdata[2]}</b>',
+                'Play Count: <b>%{customdata[5]}</b>'
+            ]),
+        )
+
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            coloraxis_showscale = False,
+        )
+        fig.update_yaxes(
+            {'showgrid': False}
+            )
+
+        fig.update_xaxes(
+            {'showgrid': False},
+            ticktext = [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December'
+            ],
+            tickvals = [
+                '1',
+                '2',
+                '3',
+                '4',
+                '5',
+                '6',
+                '7',
+                '8',
+                '9',
+                '10',
+                '11',
+                '12'
+            ]
+        )
+
+        return fig
 
 @app.callback(
     Output('artist-graph', 'hoverData'),
@@ -308,6 +589,29 @@ def update_song_title(hoverData, Gselect):
     if hoverData:
         genre_name = hoverData['points'][0]['customdata'][0]
         sel = 'Top songs by ' + str(genre_name)
+
+    return sel
+
+@app.callback(
+    Output('song-ti-2', 'children'),
+    [Input('artist-graph', 'hoverData'),
+    Input('artist-graph', 'clickData'),
+    Input('sslider', 'value'),
+    Input('genre-dropdown', 'value')])
+
+def update_song_title(hoverData, clickData, year_sel, Gselect):
+
+    if Gselect:
+        sel = 'Top ' + str(Gselect) + ' artists listened to during ' + str(year_sel)
+
+
+    if hoverData:
+        genre_name = hoverData['points'][0]['customdata'][0]
+        sel = str(year_sel) + ' recap of ' + str(genre_name)
+
+    if hoverData:
+        genre_name = clickData['points'][0]['customdata'][0]
+        sel = str(year_sel) + ' recap of ' + str(genre_name)
 
     return sel
 
