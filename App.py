@@ -5,13 +5,13 @@ import plotly.graph_objects as go
 import numpy as np 
 from datetime import datetime as dt 
 import json
-
 import dash
 import dash_core_components as dcc 
 import dash_html_components as html 
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import dash_daq as daq
+from dash.exceptions import PreventUpdate
 
 # external_stylesheets = ['https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/slate/bootstrap.min.css']
 
@@ -317,13 +317,15 @@ def update_artist_graph(genre_selected, toggle, year_sel):
             color_continuous_scale = [(0,"#EA00FF"), (1,"#BD00FF")],
             template = 'plotly_dark',
             orientation = 'v',
-            custom_data = ['Artist', 'Genre']
+            custom_data = ['Artist', 'Genre'],
+            text = 'Play Count'
         )
+
         fig.update_traces(hovertemplate = '<br>'.join([
             'Artist: <b>%{x}</b>',
             'Genre: <b>%{customdata[1]}</b>',
-            'Play Count: <b>%{y}</b>',
-        ]))
+            'Play Count: <b>%{y}</b>'])
+        )
         fig.update_xaxes(
             range=(-.5,6.5)
         )
@@ -333,6 +335,7 @@ def update_artist_graph(genre_selected, toggle, year_sel):
             coloraxis_showscale = False,
             margin = dict(b = 160)
         )
+
         fig.update_yaxes(
             {'showgrid': False}
         )
@@ -366,7 +369,8 @@ def update_artist_graph(genre_selected, toggle, year_sel):
                 color_continuous_scale = [(0,"#EA00FF"), (1,"#BD00FF")],
                 template = 'plotly_dark',
                 orientation = 'v',
-                custom_data = ['Artist', 'Genre']
+                custom_data = ['Artist', 'Genre'],
+                text = 'Play Count'
             )
             fig.update_traces(hovertemplate = '<br>'.join([
                 'Artist: <b>%{x}</b>',
@@ -420,6 +424,13 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
 
             sdf = fdf[fdf['Genre'] == genre_selected]
             sdf = sdf.groupby(['Artist', 'Song', 'Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
+
+        if clickData:
+
+            genre_name = clickData['points'][0]['customdata'][0]
+            sdf = fdf[fdf['Artist'] == genre_name]
+            sdf = sdf.groupby(['Artist','Song','Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
+
         if hoverData:
 
             genre_name = hoverData['points'][0]['customdata'][0]
@@ -427,12 +438,6 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
             sdf = sdf.groupby(['Artist','Song','Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
         #top15 = sdf.groupby(['Song'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False).head(15)['Song'].tolist()
         #sdf = sdf[sdf['Song'].isin(top15)]
-
-        if clickData:
-
-            genre_name = clickData['points'][0]['customdata'][0]
-            sdf = fdf[fdf['Artist'] == genre_name]
-            sdf = sdf.groupby(['Artist','Song','Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
 
         fig = px.bar(
             sdf,
@@ -442,7 +447,8 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
             color_continuous_scale = [(0,"#EA00FF"), (1,"#BD00FF")],
             orientation = 'v',
             template = 'plotly_dark',
-            custom_data = ['Song', 'Genre', 'Artist']
+            custom_data = ['Song', 'Genre', 'Artist'],
+            text = 'Play Count'
         )
         fig.update_layout(
             yaxis={'categoryorder':'category ascending'},
@@ -461,7 +467,7 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
         fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-            coloraxis_showscale = False,
+            coloraxis_showscale = False
         )
         fig.update_yaxes(
             {'showgrid': False}
@@ -478,6 +484,7 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
             pdf = pdf.groupby(['Month','Artist', 'Genre', 'Year', 'Monthn'])['Play Count'].count().reset_index().sort_values('Month', ascending = True)
             top7 = pdf.groupby(['Artist'])['Play Count'].sum().reset_index().sort_values('Play Count', ascending = False).head(7)['Artist'].tolist()
             pdf = pdf[pdf['Artist'].isin(top7)]
+
         if hoverData:
 
             genre_name = hoverData['points'][0]['customdata'][0]
@@ -496,12 +503,11 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
             pdf = pdf[pdf['Year'] == year_sel]
             pdf = pdf.groupby(['Artist', 'Genre', 'Year', 'Month', 'Monthn'])['Play Count'].count().reset_index()
 
-
         fig = px.line(
             pdf,
             x = 'Month',
             y = 'Play Count',
-            color = 'Artist',
+            color='Artist',
             custom_data= ['Artist', 'Genre', 'Year', 'Month', 'Monthn', 'Play Count'],
             template = 'plotly_dark'
         )
@@ -559,6 +565,8 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
 
         return fig
 
+
+        
 @app.callback(
     Output('artist-graph', 'hoverData'),
     [Input('genre-dropdown', 'value')])
