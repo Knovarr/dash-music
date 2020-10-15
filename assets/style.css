@@ -355,6 +355,8 @@ a {
   transition: .4s;
 }
 
+
+
 .rc-slider-handle-click-focused {
   border-color: #00FF9F;
 }
@@ -369,6 +371,10 @@ a {
 
 .rc-slider-rail {
   background-color: #333;
+}
+
+.rc-slider-disabled {
+  display: none;
 }
 
 .daq-toggleswitch--light__indicator--on {
