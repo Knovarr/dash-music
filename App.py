@@ -212,6 +212,7 @@ app.layout = html.Div(
                                                     dcc.Slider(
                                                         id='sslider',
                                                         className='rc',
+                                                        disabled= False,
                                                         min=2017,
                                                         max=2020,
                                                         value=2017,
@@ -617,11 +618,22 @@ def update_song_title(hoverData, clickData, year_sel, Gselect):
         genre_name = hoverData['points'][0]['customdata'][0]
         sel = str(year_sel) + ' recap of ' + str(genre_name)
 
-    if hoverData:
+    if clickData:
         genre_name = clickData['points'][0]['customdata'][0]
         sel = str(year_sel) + ' recap of ' + str(genre_name)
 
     return sel
+
+@app.callback(
+    Output('sslider', 'disabled'),
+    [Input('type-toggle', 'value')]
+)
+
+def update_slider(toggle):
+
+    if toggle == False:
+        
+        return True
 
 if __name__ == '__main__':
     app.run_server(debug = True, use_reloader = False)
