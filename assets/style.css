@@ -267,6 +267,7 @@ a {
   align-items: center;
   height: auto;
   scroll-behavior: smooth;
+  margin-left: 8px;
 }
 
 .card-graph {
