@@ -1,7 +1,8 @@
+# Import all libraries necessary
+
 import os
 import pandas as pd 
-import plotly.express as px 
-import plotly.graph_objects as go 
+import plotly.express as px
 import numpy as np 
 from datetime import datetime as dt 
 import json
@@ -11,7 +12,6 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import dash_daq as daq
-from dash.exceptions import PreventUpdate
 
 # external_stylesheets = ['https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/slate/bootstrap.min.css']
 
@@ -21,6 +21,8 @@ app = dash.Dash(__name__,
 
 )
 server = app.server
+
+# Initialise DataFrame and clean the data
 
 CURRENT_DIR = os.path.dirname(__file__)
 file_path = os.path.join(CURRENT_DIR, 'Apple Music Activity v2.csv')
@@ -108,12 +110,7 @@ top10 = fdf.groupby(['Genre'])['Play Count'].sum().reset_index().sort_values('Pl
 
 song50 = fdf.groupby(['Artist','Song'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = True).head(50)['Song'].tolist()
 
-theme =  {
-    'dark': True,
-    'detail': '#007439',
-    'primary': '#00EA64',
-    'secondary': '#6E6E6E',
-}
+# Layout of my dash application
 
 app.layout = html.Div(
     children = [
@@ -123,9 +120,18 @@ app.layout = html.Div(
                 html.Div(
                     className = 'four columns div-user-controls',
                     children = [
+                        # Image of Apple logo
                         html.Img(
                             className = 'logo', src = app.get_asset_url('Apple_Music_Logo.png')
-                        ),                     
+                        ),
+                        html.P(
+                            dcc.Markdown(
+                                '''
+                                *BETA*
+                                '''
+                            ),
+                        ),    
+                        # Card containing information and the control panel                
                         html.Div(
                             className= 'card',
                             children=[
@@ -135,20 +141,25 @@ app.layout = html.Div(
                                         value='what-is',
                                         className='tab-style',
                                         selected_className='tab-select',
-                                        children=html.Div(className='control-tab',children=[
+                                        children=html.Div(className = 'left', children=[
                                             html.Div(
                                                 className='center',
                                                 children=[
                                                     html.H2('''Clint's Music - Data App'''),
                                                 ],
                                             ),
-                                            html.P(
-                                                dcc.Markdown(
-                                                    '''
-                                                    This web app shows the music listening history  
-                                                    from my Apple Music subscription.
-                                                    ''' 
-                                                ),
+                                            html.Div(
+                                                className= 'left',
+                                                children = [
+                                                    html.P(
+                                                        dcc.Markdown(
+                                                            '''
+                                                            This web app shows the music listening history  
+                                                            from my Apple Music subscription.
+                                                            ''' 
+                                                        ),
+                                                    ),
+                                                ],
                                             ),
                                             html.Br(),
                                             html.Div(
@@ -160,8 +171,9 @@ app.layout = html.Div(
                                             html.P(
                                                 dcc.Markdown(
                                                     '''
-                                                    - Select the *'Control Panel'* tab.
+                                                    - Select the *'Control Panel'* tab above.
                                                     - Select which *graph layout* you'd like to view followed by a genre.
+                                                    - To view more detail about an artist or song, hover over the data.
                                                     '''
                                                 ),
                                             ),
@@ -252,6 +264,7 @@ app.layout = html.Div(
                         ),
                     ],
                 ),
+                # Layout for the graphs
                 html.Div(
                     className='eight columns div-for-charts',
                     children=[
@@ -292,6 +305,8 @@ app.layout = html.Div(
     ],
 )
 # ----------------------------------------------
+
+# Update artist graph based on genre, graph layout and slider selected 
 @app.callback(
     Output('artist-graph', 'figure'),
     [Input('genre-dropdown', 'value'),
@@ -307,6 +322,7 @@ def update_artist_graph(genre_selected, toggle, year_sel):
 
         tdf = fdf[fdf['Genre'] == genre_selected]
         tdf = tdf.groupby(['Artist', 'Genre'])['Play Count'].count().reset_index().sort_values('Play Count', ascending = False)
+        top7 = tdf.groupby(['Artist'])['Play Count'].sum().reset_index().sort_values('Play Count', ascending = False).head(7)['Artist'].tolist()
         # top5 = tdf.groupby(['Artist'])['Play Count'].sum().reset_index().sort_values('Play Count', ascending = False).head(5)['Artist'].tolist()
 
         # tdf = tdf[tdf['Artist'].isin(top5)]
@@ -393,6 +409,7 @@ def update_artist_graph(genre_selected, toggle, year_sel):
 
             return fig
 
+# Update song/graph graph title when graph layout is chosen
 @app.callback([
     Output('song-ti-2', 'style'),
     Output('song-ti', 'style')],
@@ -408,6 +425,7 @@ def update_title(toggle):
 
         return {'display': 'none'}, {'display': 'block'}
 
+# Update the song/time graph with genre, graph layout, year slider and artist graph outcome
 @app.callback(
     Output('song-time-graph', 'figure'),
     [Input('genre-dropdown', 'value'),
@@ -453,7 +471,10 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
         )
         fig.update_layout(
             yaxis={'categoryorder':'category ascending'},
-            margin = dict(b=200)
+            margin = dict(b=200),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            coloraxis_showscale = False
         )
         fig.update_traces(
             hovertemplate = '<br>'.join([
@@ -464,11 +485,6 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
         )
         fig.update_xaxes(
             range=(-.5,9.5)
-        )
-        fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            coloraxis_showscale = False
         )
         fig.update_yaxes(
             {'showgrid': False}
@@ -511,7 +527,7 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
             color='Artist',
             custom_data= ['Artist', 'Genre', 'Year', 'Month', 'Monthn', 'Play Count'],
             template = 'plotly_dark'
-        )
+            )
 
         fig.update_traces(
             hovertemplate = '<br>'.join([
@@ -521,6 +537,7 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
                 'Year: <b>%{customdata[2]}</b>',
                 'Play Count: <b>%{customdata[5]}</b>'
             ]),
+            mode='lines+markers'
         )
 
         fig.update_layout(
@@ -567,15 +584,23 @@ def update_song_graph(genre_selected, hoverData, clickData, toggle, year_sel):
         return fig
 
 
-        
+# Reset artist graph data to prevent conflict with song/title graph        
 @app.callback(
-    Output('artist-graph', 'hoverData'),
-    [Input('genre-dropdown', 'value')])
+    [Output('artist-graph', 'hoverData'),
+    Output('artist-graph', 'clickData')],
+    [Input('genre-dropdown', 'value'),
+    Input('type-toggle', 'value')])
 
-def update_selected_data(clickData):
+def update_selected_data(toggle, clickData):
     if clickData:
-        return None
 
+        return None, None
+
+    if toggle:
+        
+        return None, None
+
+# Dynamic artist title based on data selected
 @app.callback(
     Output('artist-title','children'),
     [Input('genre-dropdown', 'value')])
@@ -584,6 +609,7 @@ def update_artist_title(artitle):
     if artitle:
         return 'Top ' + str(artitle) + ' Artists'
 
+# Dynamic song title based on data selected
 @app.callback(
     Output('song-ti', 'children'),
     [Input('artist-graph', 'hoverData'),
@@ -601,6 +627,7 @@ def update_song_title(hoverData, Gselect):
 
     return sel
 
+# Dynamic time title based on data selected
 @app.callback(
     Output('song-ti-2', 'children'),
     [Input('artist-graph', 'hoverData'),
@@ -624,6 +651,7 @@ def update_song_title(hoverData, clickData, year_sel, Gselect):
 
     return sel
 
+# Show/Hide the year slider based on graph layout toggle selected
 @app.callback(
     Output('sslider', 'disabled'),
     [Input('type-toggle', 'value')]
