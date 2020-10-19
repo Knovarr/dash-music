@@ -181,9 +181,9 @@ app.layout = html.Div(
                                             html.P(
                                                 dcc.Markdown(
                                                     '''
-                                                    - This web app uses *Python, HTML & CSS.*  
-                                                    - *Web app source code link coming soon.*
+                                                    - This web app uses *Python, HTML & CSS.*
                                                     - *Data provided by Apple.*
+                                                    - [View the web application code](https://github.com/Knovarr/dash-music)
                                                     '''
                                                 ),
                                             ),
