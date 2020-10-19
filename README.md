@@ -8,3 +8,4 @@ This web application uses Python, HTML, CSS, and then brought together using Das
 
 Finally, the web application is hosted on Heroku.
 
+[My web application preview](https://github.com/Knovarr/dash-music/blob/main/assets/dash-music-dashboard.PNG)
