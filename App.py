@@ -121,9 +121,9 @@ app.layout = html.Div(
                     className = 'four columns div-user-controls',
                     children = [
                         # Image of Apple logo
-                        html.Img(
-                            className = 'logo', src = app.get_asset_url('Apple_Music_Logo.png')
-                        ),
+                        # html.Img(
+                        #     className = 'logo', src = app.get_asset_url('Apple_Music_Logo.png')
+                        # ),
                         html.P(
                             dcc.Markdown(
                                 '''
@@ -182,7 +182,8 @@ app.layout = html.Div(
                                                 dcc.Markdown(
                                                     '''
                                                     - This web app uses *Python, HTML & CSS.*  
-                                                    *Web app source code link coming soon.*
+                                                    - *Web app source code link coming soon.*
+                                                    - *Data provided by Apple.*
                                                     '''
                                                 ),
                                             ),
